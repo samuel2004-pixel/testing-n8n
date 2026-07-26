@@ -1,0 +1,31 @@
+{
+  "name": "YWAM-server",
+  "version": "1.0.0",
+  "description": "YWAM Contributions — hosted edition with client loan due dates, automatic SMS reminders (Twilio), and a client self-service payment portal.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": "22.17.0"
+  },
+  "dependencies": {
+    "axios": "^1.18.1",
+    "bcryptjs": "^2.4.3",
+    "connect-pg-simple": "^10.0.0",
+    "pg": "^8.13.1",
+    "csv-parser": "^3.2.1",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "pdfkit": "^0.19.1",
+    "tesseract.js": "^7.0.0",
+    "twilio": "^5.3.0",
+    "uuid": "^9.0.1",
+    "xlsx": "^0.18.5"
+  }
+}

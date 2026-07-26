@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YWAM — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; min-height: 100dvh;
+    padding: 24px;
+    padding-top: calc(24px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+  .login-card {
+    width: 100%; max-width: 360px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 40px 32px;
+    box-shadow: var(--shadow-lg);
+  }
+  .login-brand { text-align: center; margin-bottom: 26px; }
+  .login-brand .mark { font-family: var(--font-display); font-size: 32px; color: var(--primary); }
+  .login-brand .tag { display: block; color: var(--ink-faint); font-size: 13px; margin-top: 4px; }
+  .login-card label { display: block; margin-bottom: 18px; }
+  .login-card label span { display: block; font-size: 13px; color: var(--ink-muted); margin-bottom: 6px; }
+  .login-card input {
+    width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--radius);
+    background: #fff; font-size: 16px;
+    transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  }
+  .login-card input:hover { border-color: var(--ink-faint); }
+  .login-card input:focus {
+    border-color: var(--primary); outline: none;
+    box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
+  }
+  .login-card button {
+    width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none;
+    border-radius: var(--radius); font-weight: 500; cursor: pointer; font-size: 14.5px;
+    box-shadow: var(--shadow-xs);
+    transition: background-color 0.15s var(--ease), box-shadow 0.15s var(--ease), transform 0.1s var(--ease);
+  }
+  .login-card button:hover { background: var(--primary-dark); box-shadow: var(--shadow-sm); }
+  .login-card button:active { transform: scale(0.99); }
+  .err { color: var(--debit); font-size: 13px; margin-top: 12px; text-align: center; min-height: 18px; }
+  @media (max-width: 400px) {
+    .login-card { padding: 32px 22px; border-radius: var(--radius-md); }
+  }
+</style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-brand">
+      <span class="mark">YWAM</span>
+      <span class="tag">sign in to manage your Contributions</span>
+    </div>
+    <form id="loginForm">
+      <label>
+        <span>Password</span>
+        <input type="password" id="password" required autofocus>
+      </label>
+      <button type="submit">Sign in</button>
+      <div class="err" id="err"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const password = document.getElementById("password").value;
+      const errEl = document.getElementById("err");
+      errEl.textContent = "";
+      try {
+        const res = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        });
+        if (res.ok) {
+          window.location.href = "/index.html";
+        } else {
+          const data = await res.json().catch(() => ({}));
+          errEl.textContent = data.error === "server_not_configured"
+            ? "No admin password is set on the server yet — set ADMIN_PASSWORD in .env."
+            : "Incorrect password.";
+        }
+      } catch (err) {
+        errEl.textContent = "Could not reach the server.";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YWAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<!-- Added ?v=2 to force browser to ignore old cache and load the new favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
+<link rel="apple-touch-icon" href="/favicon.ico?v=2">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">YWAM
+      </span>
+      <div class="brand-text">          TN MUT
+        <span class="brand-name"></span>
+        <span class="brand-tag"></span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item is-active" data-view="yearlyTarget">
+        <span class="nav-num">01</span> Yearly Contribution
+      </button>
+     
+      <button class="nav-item" data-view="entry">
+        <span class="nav-num">03</span> New Entry
+      </button>
+      
+      <button class="nav-item" data-view="Missionary">
+        <span class="nav-num">05</span> Missionary
+      </button>
+      <button class="nav-item" data-view="loans">
+        <span class="nav-num">06</span> Loans <span class="nav-badge" id="overdueBadge" hidden>0</span>
+      </button>
+      <!-- NEW: Verify Payments Tab -->
+      <button class="nav-item" data-view="verify">
+        <span class="nav-num">07</span> Verify Payments
+      </button>
+      <button class="nav-item" data-view="thirdParty">
+        <span class="nav-num">08</span> Third-Party Payments
+      </button>
+      <button class="nav-item" data-view="courier">
+        <span class="nav-num">09</span> Medical Bills
+      </button>
+      <button class="nav-item" data-view="deleted">
+        <span class="nav-num">10</span> Deleted Entries
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="foot-balance">
+        <span class="foot-label">Total</span>
+        <span class="foot-amount" id="sidebarBalance">—</span>
+      </div>
+      <button class="btn btn-ghost small" id="btnLogout" aria-label="Log out" title="Log out">
+        <span class="btn-logout-icon" aria-hidden="true">⏻</span><span class="btn-logout-text">Log out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section class="view" id="view-dashboard">
+      <header class="view-head">
+        <h1>Dashboard</h1>
+        <p class="view-sub">Everything coming in, everything going out.</p>
+      </header>
+
+      <div class="summary-row">
+        <div class="summary-card credit">
+          <span class="summary-label">Total Income</span>
+          <span class="summary-amount" id="sumIncome">—</span>
+        </div>
+        <div class="summary-card debit">
+          <span class="summary-label">Total Expenses</span>
+          <span class="summary-amount" id="sumExpense">—</span>
+        </div>
+        <div class="summary-card balance">
+          <span class="summary-label">Total Balance</span>
+          <span class="summary-amount" id="sumBalance">—</span>
+        </div>
+      </div>
+
+      <div class="panel" id="overduePanel" hidden>
+        <div class="panel-head">
+          <h2>Overdue lends</h2>
+          <button class="link-btn" data-view="loans">View all loans →</button>
+        </div>
+        <div class="table-wrap">
+          <table class="Contributions-table" id="overdueTable">
+            <thead>
+              <tr>
+                <th>Missionary</th>
+                <th>Due date</th>
+                <th class="num">Outstanding</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="overdueBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Recent Entries</h2>
+          <button class="link-btn" data-view="Contributions">View full Contributions →</button>
+        </div>
+        <div class="table-wrap">
+          <table class="Contributions-table" id="recentTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Particulars</th>
+                <th>Missionary</th>
+                <th class="num">Credit</th>
+                <th class="num">Debit</th>
+              </tr>
+            </thead>
+            <tbody id="recentBody"></tbody>
+          </table>
+          <p class="empty-note" id="recentEmpty">No entries yet. Add your first one from <button class="link-btn" data-view="entry">New Entry</button>.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Balance by Missionary</h2>
+        </div>
+        <div class="table-wrap">
+          <table class="Contributions-table" id="clientBalTable">
+            <thead>
+              <tr>
+                <th>Missionary</th>
+                <th class="num">Received</th>
+                <th class="num">Expenses</th>
+                <th class="num">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="clientBalBody"></tbody>
+          </table>
+          <p class="empty-note" id="clientBalEmpty">No Missionary yet. Add one from <button class="link-btn" data-view="Missionary">Missionary</button>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW ENTRY -->
+    <section class="view" id="view-entry">
+      <header class="view-head">
+        <h1>New Entry</h1>
+        <p class="view-sub">Record money in or money out. To lend money to a missionary with a due date, use the Loans tab instead.</p>
+      </header>
+
+      <div class="panel form-panel">
+        <div class="type-toggle" id="typeToggle">
+          <button class="toggle-btn is-active" data-type="income">Income</button>
+          <button class="toggle-btn" data-type="expense">Expense</button>
+        </div>
+
+        <form id="entryForm">
+          <div class="form-grid">
+            <label class="field">
+              <span>Date</span>
+              <input type="date" id="fDate" required>
+            </label>
+
+            <label class="field">
+              <span>Amount</span>
+              <input type="number" id="fAmount" step="0.01" min="0.01" placeholder="0.00" required>
+            </label>
+
+            <label class="field">
+              <span>Category</span>
+              <select id="fCategory"></select>
+            </label>
+
+            <label class="field">
+              <span>Missionary <em>(optional)</em></span>
+              <select id="fClient">
+                <option value="">No missionary</option>
+              </select>
+            </label>
+
+            <label class="field field-wide">
+              <span>Description</span>
+              <input type="text" id="fDesc" placeholder="What was this for?">
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="fSubmit">Add Income</button>
+            <span class="form-msg" id="formMsg"></span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Contributions -->
+    <section class="view" id="view-Contributions">
+      <header class="view-head">
+        <h1>Contributions</h1>
+        <p class="view-sub">Every entry, running balance included.</p>
+      </header>
+
+      <div class="filter-bar">
+        <select id="filterType">
+          <option value="all">All types</option>
+          <option value="income">Income only</option>
+          <option value="expense">Expense only</option>
+        </select>
+        <select id="filterClient">
+          <option value="all">All Missionary</option>
+        </select>
+        <input type="search" id="filterSearch" placeholder="Search client name, particulars, category…">
+      </div>
+
+      <div class="filter-jump-banner" id="ContributionsJumpBanner" hidden>
+        <span id="ContributionsJumpText"></span>
+        <button type="button" class="link-btn" id="ContributionsJumpClear">Clear</button>
+      </div>
+
+      <div class="panel">
+        <div class="table-wrap">
+          <table class="Contributions-table wide" id="ContributionsTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Particulars</th>
+                <th>Category</th>
+                <th>Missionary</th>
+                <th class="num">Credit</th>
+                <th class="num">Debit</th>
+                <th class="num">Balance</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="ContributionsBody"></tbody>
+          </table>
+          <p class="empty-note" id="ContributionsEmpty">No entries match. Try a different filter, or add one from <button class="link-btn" data-view="entry">New Entry</button>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Missionary -->
+    <section class="view" id="view-Missionary">
+      <header class="view-head">
+        <h1>Missionary</h1>
+        <p class="view-sub">Who you bill, and what they owe or have paid.</p>
+      </header>
+
+      <div class="panel form-panel">
+        <form id="clientForm">
+          <div class="profile-upload">
+            <div class="avatar avatar-lg" id="cPhotoPreview">+</div>
+            <label class="btn btn-ghost file-btn small">
+              Add photo
+              <input type="file" id="cPhoto" accept="image/*" hidden>
+            </label>
+            <button type="button" class="link-btn" id="cPhotoRemove" hidden>Remove photo</button>
+          </div>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>Name</span>
+              <input type="text" id="cName" placeholder="Client or company name" required>
+            </label>
+            <label class="field">
+              <span>Company <em>(optional)</em></span>
+              <input type="text" id="cCompany" placeholder="Business name">
+            </label>
+            <label class="field">
+              <span>Email <em>(optional)</em></span>
+              <input type="email" id="cEmail" placeholder="name@example.com">
+            </label>
+            <label class="field">
+              <span>Phone <em>(for SMS reminders — include country code)</em></span>
+              <input type="tel" id="cPhone" placeholder="+91 98765 43210">
+            </label>
+            <label class="field">
+              <span>MUT ID <em>(auto-suggested — edit to set your own)</em></span>
+              <input type="text" id="cClientId" placeholder="e.g. CL-0001" required>
+            </label>
+            <label class="field">
+              <span>YWAM BRANCH <em>(optional)</em></span>
+              <input type="text" id="cYWAM" placeholder="Street, city, state">
+            </label>
+            <label class="field field-wide">
+              <span>Notes <em>(optional)</em></span>
+              <input type="text" id="cNotes" placeholder="Terms, preferences, anything else…">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="cSubmit">Add Missionary</button>
+            <button type="button" class="btn btn-ghost" id="cCancel" hidden>Cancel edit</button>
+            <span class="form-msg" id="clientMsg"></span>
+          </div>
+          <input type="hidden" id="cEditId">
+          <input type="hidden" id="cPhotoData">
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="filter-bar">
+          <input type="search" id="missionarySearch" placeholder="Search by name, MUT ID, phone, email or company…" autocomplete="off">
+          <button type="button" class="btn btn-ghost" id="missionarySearchClear" hidden>Clear</button>
+          <a class="btn btn-ghost" href="/admin/export-portal-links-csv" download>⬇ Export portal links (CSV)</a>
+          <a class="btn btn-ghost" href="/admin/export-portal-links-pdf" download>⬇ Export portal links (PDF)</a>
+        </div>
+        <div class="table-wrap">
+          <table class="Contributions-table" id="MissionaryTable">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>MUT ID</th>
+                <th>Contact</th>
+                <th class="num">Balance</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="MissionaryBody"></tbody>
+          </table>
+          <p class="empty-note" id="MissionaryEmpty">No Missionary yet — add your first one above.</p>
+          <p class="empty-note" id="MissionarySearchEmpty" hidden>No Missionary match your search.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOANS -->
+    <section class="view" id="view-loans">
+      <header class="view-head">
+        <h1>Loans</h1>
+        <p class="view-sub">Money lent to Missionary, due dates, and repayments. Overdue loans get an automatic SMS reminder once a day.</p>
+      </header>
+
+      <div class="panel form-panel">
+        <h2>Lend money to a client</h2>
+        <form id="loanForm">
+          <div class="form-grid">
+            <label class="field">
+              <span>Missionary</span>
+              <select id="lClient" required></select>
+            </label>
+            <label class="field">
+              <span>Amount</span>
+              <input type="number" id="lAmount" step="0.01" min="0.01" placeholder="0.00" required>
+            </label>
+            <label class="field">
+              <span>Date given</span>
+              <input type="date" id="lDateGiven" required>
+            </label>
+            <label class="field">
+              <span>Due date</span>
+              <input type="date" id="lDueDate" required>
+            </label>
+            <label class="field field-wide">
+              <span>Note <em>(optional)</em></span>
+              <input type="text" id="lNote" placeholder="Reason, terms, anything else…">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Record loan</button>
+            <span class="form-msg" id="loanMsg"></span>
+          </div>
+        </form>
+      </div>
+
+      <div class="filter-bar">
+        <select id="loanFilterStatus">
+          <option value="all">All loans</option>
+          <option value="pending">Unpaid (pending + partial)</option>
+          <option value="overdue">Overdue only</option>
+        </select>
+      </div>
+
+      <div class="panel">
+        <div class="table-wrap">
+          <table class="Contributions-table wide" id="loansTable">
+            <thead>
+              <tr>
+                <th>Missionary</th>
+                <th>Given</th>
+                <th>Due date</th>
+                <th class="num">Amount</th>
+                <th class="num">Paid</th>
+                <th class="num">Outstanding</th>
+                <th>Status</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="loansBody"></tbody>
+          </table>
+          <p class="empty-note" id="loansEmpty">No loans recorded yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERIFY PAYMENTS (NEW) -->
+    <section class="view" id="view-verify">
+      <header class="view-head">
+        <h1>Verify Payments</h1>
+        <p class="view-sub">Review missionary payment proofs, verify amounts via OCR, and approve to update balances.</p>
+      </header>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Pending Verifications</h2>
+          <button class="btn btn-ghost small" id="btnRefreshVerify"> Refresh List</button>
+        </div>
+        <div class="table-wrap">
+          <table class="Contributions-table wide" id="verifyTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Missionary</th>
+                <th class="num">Declared Amount</th>
+                <th class="num">OCR Detected</th>
+                <th>Receipt</th>
+                <th class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="verifyBody">
+              <tr><td colspan="6" class="empty-note">Loading pending payments...</td></tr>
+            </tbody>
+          </table>
+          <p class="empty-note" id="verifyEmpty" hidden>No pending payments to verify.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- THIRD-PARTY PAYMENTS (NEW) -->
+    <section class="view" id="view-thirdParty">
+      <header class="view-head">
+        <h1>Third-Party Payments</h1>
+        <p class="view-sub">Money paid out to someone who isn't a Missionary on file — a vendor, courier, or other outside party. Counted as an expense, same as everything else.</p>
+      </header>
+
+      <div class="summary-row">
+        <div class="summary-card credit">
+          <span class="summary-label">Total Income</span>
+          <span class="summary-amount" id="tpTotalIncome">—</span>
+        </div>
+        <div class="summary-card debit">
+          <span class="summary-label">Paid to Third Parties</span>
+          <span class="summary-amount" id="tpTotalPaid">—</span>
+        </div>
+        <div class="summary-card balance">
+          <span class="summary-label">Net After Third-Party Payments</span>
+          <span class="summary-amount" id="tpNetAfter">—</span>
+        </div>
+      </div>
+
+      <div class="panel form-panel">
+        <form id="thirdPartyForm">
+          <div class="form-grid">
+            <label class="field">
+              <span>Date</span>
+              <input type="date" id="tpDate" required>
+            </label>
+            <label class="field">
+              <span>Paid To</span>
+              <input type="text" id="tpPayee" placeholder="Vendor / person / company name" required>
+            </label>
+            <label class="field">
+              <span>Amount</span>
+              <input type="number" id="tpAmount" step="0.01" min="0.01" placeholder="0.00" required>
+            </label>
+            <label class="field field-wide">
+              <span>Description</span>
+              <input type="text" id="tpDesc" placeholder="What was this for?">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="tpSubmit">Add Payment</button>
+            <span class="form-msg" id="tpFormMsg"></span>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>All Third-Party Payments</h2>
+          <a class="btn btn-ghost" href="/admin/export-third-party-payments-csv" download>⬇ Export CSV</a>
+          <a class="btn btn-ghost" href="/admin/export-third-party-payments-pdf" download>⬇ Export PDF</a>
+        </div>
+        <div class="table-wrap">
+          <table class="Contributions-table wide" id="tpTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Paid To</th>
+                <th>Description</th>
+                <th class="num">Amount</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="tpBody"></tbody>
+          </table>
+          <p class="empty-note" id="tpEmpty" hidden>No third-party payments recorded yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COURIER (NEW) -->
+    <section class="view" id="view-courier">
+      <header class="view-head">
+        <h1>Medical Bills</h1>
+        <p class="view-sub">Missionary-to-MUT Billings — Bill Received Date, Bill Send To MUT Date, total amounts, and Recieved Bill Amount MUT.</p>
+      </header>
+
+      <div class="summary-row">
+        <div class="summary-card credit">
+          <span class="summary-label">Total Bill Amount</span>
+          <span class="summary-amount" id="courierTotalAmount">—</span>
+        </div>
+        <div class="summary-card debit">
+          <span class="summary-label">Total Received Bill Amount MUT</span>
+          <span class="summary-amount" id="courierTotalPayout">—</span>
+        </div>
+        <div class="summary-card balance">
+          <span class="summary-label">Net Retained</span>
+          <span class="summary-amount" id="courierNetRetained">—</span>
+        </div>
+      </div>
+
+      <div class="panel form-panel">
+        <h2 id="courierFormTitle">Medical Bill Details</h2>
+        <form id="courierForm">
+          <div class="form-grid">
+            <label class="field">
+              <span>Missionary<em>(optional)</em></span>
+              <select id="couClient"><option value="">No missionary</option></select>
+            </label>
+            <label class="field">
+              <span>Third Party / Courier</span>
+              <input type="text" id="couThirdParty" placeholder="Courier company or third party name" required>
+            </label>
+            <label class="field">
+              <span>Bill Received Date</span>
+              <input type="date" id="couSendDate" required>
+            </label>
+            <label class="field">
+              <span>Bill Send To MUT Date <em>(optional)</em></span>
+              <input type="date" id="couCourierDate">
+            </label>
+            <label class="field">
+              <span>Total Bill Amount</span>
+              <input type="number" id="couTotalAmount" step="0.01" min="0" placeholder="0.00" required>
+            </label>
+            <label class="field">
+              <span>Received Bill Amount MUT</span>
+              <input type="number" id="couPayout" step="0.01" min="0" placeholder="0.00">
+            </label>
+            <label class="field field-wide">
+              <span>Description <em>(optional)</em></span>
+              <input type="text" id="couDesc" placeholder="Tracking number, contents, notes…">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="couSubmit">Add Shipment</button>
+            <button type="button" class="btn btn-ghost" id="couCancel" hidden>Cancel edit</button>
+            <span class="form-msg" id="couFormMsg"></span>
+          </div>
+          <input type="hidden" id="couEditId">
+        </form>
+      </div>
+
+      <div class="filter-bar">
+        <input type="search" id="courierSearch" placeholder=" Search client, third party, description…">
+        <select id="courierExportFormat">
+          <option value="csv">CSV</option>
+          <option value="xlsx">Excel (.xlsx)</option>
+          <option value="pdf">PDF</option>
+        </select>
+        <button type="button" class="btn btn-ghost" id="courierExportBtn">⬇ Export</button>
+      </div>
+
+      <div class="panel">
+        <div class="table-wrap">
+          <table class="Contributions-table wide" id="courierTable">
+            <thead>
+              <tr>
+                <th>Missionary</th>
+                <th>Third Party</th>
+                <th>Bill Received Date</th>
+                <th>Bill Send To MUT Date</th>
+                <th class="num">Total Bill Amount</th>
+                <th class="num">Received Bill Amount MUT</th>
+                <th>Description</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="courierBody"></tbody>
+          </table>
+          <p class="empty-note" id="courierEmpty" hidden>No courier shipments recorded yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DELETED ENTRIES (NEW) -->
+    <section class="view" id="view-deleted">
+      <header class="view-head">
+        <h1>Deleted Entries</h1>
+        <p class="view-sub">A record of everything permanently removed elsewhere in the app — entries, third-party payments, loans, clients, and courier shipments.</p>
+      </header>
+
+      <div class="filter-bar">
+        <select id="delFilterType">
+          <option value="all">All types</option>
+          <option value="transaction">Entries (Income/Expense)</option>
+          <option value="third_party_payment">Third-Party Payments</option>
+          <option value="loan">Loans</option>
+          <option value="client">Missionary</option>
+          <option value="courier">Medicals bills</option>
+        </select>
+        <input type="search" id="delSearch" placeholder="Search summary…">
+        <select id="delExportFormat">
+          <option value="csv">CSV</option>
+          <option value="xlsx">Excel (.xlsx)</option>
+          <option value="pdf">PDF</option>
+        </select>
+        <button type="button" class="btn btn-ghost" id="delExportBtn">⬇ Export</button>
+      </div>
+
+      <div class="panel">
+        <div class="table-wrap">
+          <table class="Contributions-table wide" id="deletedTable">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Summary</th>
+                <th class="num">Amount</th>
+                <th>Entry Date</th>
+                <th>Deleted At</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="deletedBody"></tbody>
+          </table>
+          <p class="empty-note" id="deletedEmpty" hidden>No deleted entries yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- YEARLY CONTRIBUTION TARGET -->
+    <section class="view is-active" id="view-yearlyTarget">
+      <header class="view-head yt-view-head">
+        <div>
+          <h1>Yearly Contribution</h1>
+          <p class="view-sub">Minimum ₹100/month, ₹1200/year per member — who's on track and who's behind. Registration fees are excluded from these totals.</p>
+        </div>
+        <!-- ADDED IMPORT BUTTON NEXT TO EXPORT -->
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+          <div style="display: flex; gap: 10px;">
+            <label class="btn btn-ghost" style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+              ⬆ Import CSV
+              <input type="file" id="ytImportCsv" accept=".csv" hidden>
+            </label>
+            <button type="button" class="btn btn-ghost" id="ytExportCsv">⬇ Export CSV</button>
+            <button type="button" class="btn btn-ghost" id="ytExportPdf">⬇ Export PDF</button>
+          </div>
+          <span style="font-size:12px; color:#8a8a8a;">Import needs columns: Member ID, Name, Jan…Dec (same as Export)</span>
+        </div>
+      </header>
+
+      <div class="filter-bar">
+        <select id="ytYear"></select>
+        <label class="field" style="max-width:150px;">
+          <span>Monthly target</span>
+          <input type="number" id="ytMonthlyTarget" value="100" min="1" step="1">
+        </label>
+        <label class="field" style="max-width:150px;">
+          <span>Yearly Contribution</span>
+          <input type="number" id="ytYearlyTarget" value="1200" min="1" step="1">
+        </label>
+        <input
+          type="text"
+          id="ytSearch"
+          placeholder=" Search Member Name or Member ID..."
+          style="width:320px; padding:10px; border-radius:8px; border:1px solid #ccc;"
+        >
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-card credit">
+          <span class="summary-label">Contribution Collected</span>
+          <span class="summary-amount" id="ytTotalCollected">—</span>
+        </div>
+        <div class="summary-card debit">
+          <span class="summary-label">Total Due</span>
+          <span class="summary-amount" id="ytTotalPending">—</span>
+        </div>
+        <div class="summary-card balance">
+          <span class="summary-label">Total Yearly Contribution</span>
+          <span class="summary-amount" id="ytTotalTarget">—</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Pending overview</h2>
+        </div>
+        <div class="yt-status-grid" id="ytStatusGrid"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Monthly contributions — <span id="ytYearLabel"></span></h2>
+        </div>
+        <div class="table-wrap">
+          <table class="Contributions-table yt-table" id="ytTable">
+            <thead>
+              <tr id="ytTableHeadRow">
+                <th class="sticky-col">Member</th>
+              </tr>
+            </thead>
+            <tbody id="ytTableBody"></tbody>
+            <tfoot id="ytTableFoot"></tfoot>
+          </table>
+          <p class="empty-note" id="ytEmpty" hidden>No members yet — add Missionary first.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIENT PROFILE DRAWER -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <aside class="drawer" id="clientDrawer">
+      <div class="drawer-head">
+        <button class="icon-btn" id="drawerClose" title="Close">✕</button>
+      </div>
+      <div class="drawer-body" id="drawerBody"></div>
+    </aside>
+
+    <!-- IMAGES DRAWER (attach/view/download multiple images per entry) -->
+    <div class="drawer-overlay" id="imagesOverlay"></div>
+    <aside class="drawer" id="imagesDrawer">
+      <div class="drawer-head">
+        <button class="icon-btn" id="imagesClose" title="Close">✕</button>
+      </div>
+      <div class="drawer-body" id="imagesBody"></div>
+    </aside>
+
+    <!-- LOAN PAYMENT MODAL -->
+    <div class="drawer-overlay" id="payOverlay"></div>
+    <aside class="drawer" id="payDrawer">
+      <div class="drawer-head">
+        <button class="icon-btn" id="payClose" title="Close">✕</button>
+      </div>
+      <div class="drawer-body" id="payBody"></div>
+    </aside>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
