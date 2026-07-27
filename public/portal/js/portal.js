@@ -140,89 +140,93 @@
  
       <!-- NEW: IMPACT / MUT MEDICAL ASSISTANCE FORM -->
       <div class="panel upload-panel">
-        <h2>MUT Medical Assistance Form</h2>
+        <h2>PATIENT APPLICATION FORM</h2>
         <p class="view-sub upload-sub"></p>
- 
-        <form id="mutForm" class="upload-form mut-form-grid">
-          <label class="upload-label">
-            <span>Name</span>
-            <input type="text" id="mutName" name="name" class="upload-input" value="${escapeHtml(data.name || "")}" required>
-          </label>
-          <label class="upload-label">
-            <span>Father / Husband Name</span>
-            <input type="text" id="mutFatherHusbandName" name="fatherHusbandName" class="upload-input">
-          </label>
-          <label class="upload-label">
-            <span>Age</span>
-            <input type="number" id="mutAge" name="age" min="0" class="upload-input">
-          </label>
-          <label class="upload-label">
-            <span>Gender</span>
-            <select id="mutGender" name="gender" class="upload-input">
-              <option value="">Select…</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
-          <label class="upload-label">
-            <span>Married / Unmarried</span>
-            <select id="mutMaritalStatus" name="maritalStatus" class="upload-input">
-              <option value="">Select…</option>
-              <option value="Married">Married</option>
-              <option value="Unmarried">Unmarried</option>
-            </select>
-          </label>
-          <label class="upload-label">
-            <span>Occupation</span>
-            <input type="text" id="mutOccupation" name="occupation" class="upload-input">
-          </label>
-          <label class="upload-label">
-            <span>Date of Birth</span>
-            <input type="date" id="mutDob" name="dob" class="upload-input">
-          </label>
-          <label class="upload-label">
-            <span>Impact / MUT ID</span>
-            <input type="text" id="mutId" name="mutId" class="upload-input" value="${escapeHtml(data.member_id || "")}">
-          </label>
-          <label class="upload-label">
-            <span>Hospital Number</span>
-            <input type="text" id="mutHospitalNumber" name="hospitalNumber" class="upload-input">
-          </label>
-          <label class="upload-label mut-full">
-            <span>Current Address</span>
-            <textarea id="mutCurrentAddress" name="currentAddress" class="upload-input" rows="2"></textarea>
-          </label>
-          <label class="upload-label mut-full">
-            <span>Aadhaar Address</span>
-            <textarea id="mutAadhaarAddress" name="aadhaarAddress" class="upload-input" rows="2"></textarea>
-          </label>
-          <label class="upload-label">
-            <span>Aadhaar Number</span>
-            <input type="text" id="mutAadhaarNumber" name="aadhaarNumber" class="upload-input">
-          </label>
-          <label class="upload-label">
-            <span>Tentative Appointment Date</span>
-            <input type="date" id="mutAppointmentDate" name="appointmentDate" class="upload-input">
-          </label>
-          <label class="upload-label">
-            <span>Personal Contact Number</span>
-            <input type="tel" id="mutPersonalContact" name="personalContact" class="upload-input" value="${escapeHtml(data.phone || "")}">
-          </label>
-          <label class="upload-label">
-            <span>Personal Email</span>
-            <input type="email" id="mutPersonalEmail" name="personalEmail" class="upload-input" value="${escapeHtml(data.email || "")}">
-          </label>
-          <label class="upload-label">
-            <span>Office Contact Number</span>
-            <input type="tel" id="mutOfficeContact" name="officeContact" class="upload-input">
-          </label>
-          <label class="upload-label mut-full">
-            <span>Brief Nature of Illness</span>
-            <textarea id="mutIllnessNature" name="illnessNature" class="upload-input" rows="3"></textarea>
-          </label>
- 
-          <button type="submit" id="submitMutBtn" class="upload-submit-btn mut-full">
+
+        <form id="mutForm" class="upload-form mut-paper-form">
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutName">NAME AS PER AADHAR CARD</label>
+            <div class="mut-row-value"><input type="text" id="mutName" name="name" class="upload-input" value="${escapeHtml(data.name || "")}" required></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutFatherHusbandName">FATHER&rsquo;S NAME/ HUSBAND&rsquo;S NAME</label>
+            <div class="mut-row-value"><input type="text" id="mutFatherHusbandName" name="fatherHusbandName" class="upload-input"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutAge">AGE</label>
+            <div class="mut-row-value"><input type="number" id="mutAge" name="age" min="0" class="upload-input"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutGender">GENDER</label>
+            <div class="mut-row-value">
+              <select id="mutGender" name="gender" class="upload-input">
+                <option value="">Select…</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutMaritalStatus">MARRIED/UNMARRIED</label>
+            <div class="mut-row-value">
+              <select id="mutMaritalStatus" name="maritalStatus" class="upload-input">
+                <option value="">Select…</option>
+                <option value="Married">Married</option>
+                <option value="Unmarried">Unmarried</option>
+              </select>
+            </div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutOccupation">OCCUPATION OF THE APPLICANT</label>
+            <div class="mut-row-value"><input type="text" id="mutOccupation" name="occupation" class="upload-input"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutDob">DATE OF BIRTH</label>
+            <div class="mut-row-value"><input type="date" id="mutDob" name="dob" class="upload-input"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutId">IMPACT /MUT ID NUMBER</label>
+            <div class="mut-row-value"><input type="text" id="mutId" name="mutId" class="upload-input" value="${escapeHtml(data.member_id || "")}"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutHospitalNumber">HOSPITAL NUMBER OF CMCH</label>
+            <div class="mut-row-value"><input type="text" id="mutHospitalNumber" name="hospitalNumber" class="upload-input"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutCurrentAddress">CURRENT FIELD ADDRESS WITH PINCODE</label>
+            <div class="mut-row-value"><textarea id="mutCurrentAddress" name="currentAddress" class="upload-input" rows="2"></textarea></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutAadhaarAddress">ADDRESS AS PER AADHAR CARD WITH PINCODE</label>
+            <div class="mut-row-value"><textarea id="mutAadhaarAddress" name="aadhaarAddress" class="upload-input" rows="2"></textarea></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutAadhaarNumber">AADHAR CARD NUMBER</label>
+            <div class="mut-row-value"><input type="text" id="mutAadhaarNumber" name="aadhaarNumber" class="upload-input"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutAppointmentDate">TENTATIVE DATES OF APPOINTMENT</label>
+            <div class="mut-row-value"><input type="date" id="mutAppointmentDate" name="appointmentDate" class="upload-input"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutPersonalContact">PERSONAL CONTACT NUMBER</label>
+            <div class="mut-row-value"><input type="tel" id="mutPersonalContact" name="personalContact" class="upload-input" value="${escapeHtml(data.phone || "")}"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutPersonalEmail">PERSONAL E-MAIL ID</label>
+            <div class="mut-row-value"><input type="email" id="mutPersonalEmail" name="personalEmail" class="upload-input" value="${escapeHtml(data.email || "")}"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutOfficeContact">OFFICE CONTACT NUMBER</label>
+            <div class="mut-row-value"><input type="tel" id="mutOfficeContact" name="officeContact" class="upload-input"></div>
+          </div>
+          <div class="mut-row">
+            <label class="mut-row-label" for="mutIllnessNature">BRIEF NATURE OF ILLNESS</label>
+            <div class="mut-row-value"><textarea id="mutIllnessNature" name="illnessNature" class="upload-input" rows="3"></textarea></div>
+          </div>
+
+          <button type="submit" id="submitMutBtn" class="upload-submit-btn">
             Submit Form
           </button>
         </form>
