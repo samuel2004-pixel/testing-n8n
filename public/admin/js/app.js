@@ -1193,12 +1193,12 @@ document
           }
 
           const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
-          const memberIdIdx = headers.findIndex(h => h === "member id");
+          const memberIdIdx = headers.findIndex(h => h === "MUT ID");
           const nameIdx = headers.findIndex(h => h === "name");
           const ywamIdx = headers.findIndex(h => h === "ywam");
 
           if (memberIdIdx === -1 || nameIdx === -1) {
-            toast('CSV must have "Member ID" and "Name" columns.', true);
+            toast('CSV must have "MUT ID" and "Name" columns.', true);
             e.target.value = "";
             return;
           }

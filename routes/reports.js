@@ -304,7 +304,7 @@ router.get("/api/reports/yearly-contributions/export", async (req, res) => {
 
     csvRows.push([
       "S.No",
-      "Member ID",
+      "MUT ID",
       "Name",
       "YWAM Branch",
       "Jan",
@@ -432,7 +432,7 @@ router.get("/api/reports/yearly-contributions/export-pdf", async (req, res) => {
 
     const columns = [
       { key: "sno", label: "S.No", width: 0.6, align: "right" },
-      { key: "member_id", label: "Member ID", width: 1.1 },
+      { key: "member_id", label: "MUT ID", width: 1.1 },
       { key: "name", label: "Name", width: 1.6 },
       { key: "ywam", label: "YWAM", width: 1.1 },
       ...monthLabels.map((label, i) => ({ key: `m${i + 1}`, label, width: 0.7, align: "right" })),
@@ -574,7 +574,7 @@ router.post("/api/reports/yearly-contributions/import", async (req, res) => {
           continue;
         }
 
-        const memberIdIndex = headers.indexOf('Member ID');
+        const memberIdIndex = headers.indexOf('MUT ID');
         const nameIndex = headers.indexOf('Name');
         const memberId = memberIdIndex >= 0 ? (row[memberIdIndex] || '').replace(/"/g, '').trim() : '';
         const rowName = nameIndex >= 0 ? (row[nameIndex] || '').replace(/"/g, '').trim() : '';
@@ -591,7 +591,7 @@ router.post("/api/reports/yearly-contributions/import", async (req, res) => {
 
         if (!memberId && !rowName) {
           results.skipped++;
-          results.details.push({ row: i + 1, error: "Missing Member ID and Name" });
+          results.details.push({ row: i + 1, error: "Missing MUT ID and Name" });
           continue;
         }
 

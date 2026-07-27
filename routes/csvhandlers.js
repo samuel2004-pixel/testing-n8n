@@ -26,7 +26,7 @@ module.exports = (db, upload) => {
             path: filePath,
             header: [
                 { id: 'name', title: 'Name' },
-                { id: 'member_id', title: 'Member ID' },
+                { id: 'member_id', title: 'MUT ID' },
                 { id: 'YWAM', title: 'YWAM Branch' },
                 { id: 'total_amount', title: 'Total Amount' },
                 { id: 'total_paid', title: 'Total Paid' },
@@ -114,7 +114,7 @@ module.exports = (db, upload) => {
                 subtitle: "YWAM - TRICHY  |  Each missionary's self-service portal link",
                 columns: [
                     { key: "sno", label: "S.No", width: 0.5, align: "right" },
-                    { key: "member_id", label: "Member ID", width: 1 },
+                    { key: "member_id", label: "MUT ID", width: 1 },
                     { key: "name", label: "Name", width: 1.6 },
                     { key: "link", label: "Portal Link", width: 3 },
                 ],
