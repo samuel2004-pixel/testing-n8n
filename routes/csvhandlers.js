@@ -193,7 +193,7 @@ module.exports = (db, upload) => {
 
             const buf = await buildPDFBuffer({
                 title: "Third-Party Payments",
-                subtitle: "YWAM - TRICHY  |  All payments made to vendors, couriers, and other non-missionary payees",
+                subtitle: "YWAM - TAMILNADU to MUT Contributions",
                 columns: [
                     { key: "sno", label: "S.No", width: 0.5, align: "right" },
                     { key: "date", label: "Date", width: 1 },

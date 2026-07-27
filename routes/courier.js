@@ -123,7 +123,7 @@ router.delete("/api/courier/:id", async (req, res) => {
     await logDeletion({
       entryType: "courier",
       entryId: row.id,
-      summary: `Shipment for ${row.client_name || "Unknown client"} → ${row.third_party_name || "Third party"}`,
+      summary: `Shipment for ${row.client_name || "Unknown missionary"} → ${row.third_party_name || "Third party"}`,
       amount: row.total_amount,
       entryDate: row.send_date,
       data: row,
@@ -159,12 +159,12 @@ router.get("/api/courier/export", async (req, res) => {
     const rows = await db.prepare(sql).all(...params);
 
     const columns = [
-      { key: "client_name", label: "Client", width: 1.3 },
+      { key: "client_name", label: "Missionary", width: 1.3 },
       { key: "third_party_name", label: "Third Party", width: 1.3 },
-      { key: "send_date", label: "Send Date", width: 1 },
-      { key: "courier_date", label: "Courier Date", width: 1 },
+      { key: "send_date", label: "Bill Received Date", width: 1 },
+      { key: "courier_date", label: "Bill sent to MUT", width: 1 },
       { key: "total_amount", label: "Total Amount", align: "right", width: 1 },
-      { key: "third_party_payout", label: "Payout", align: "right", width: 1 },
+      { key: "third_party_payout", label: "Received Payments MUT", align: "right", width: 1 },
       { key: "description", label: "Description", width: 1.8 },
     ];
 
@@ -177,7 +177,7 @@ router.get("/api/courier/export", async (req, res) => {
 
     await sendExport(req, res, {
       title: "Courier Shipments",
-      subtitle: "Client-to-Third-Party shipments",
+      subtitle: "",
       columns,
       rows: data,
       filenameBase: "courier-shipments",
